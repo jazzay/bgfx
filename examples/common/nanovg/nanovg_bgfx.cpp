@@ -1108,11 +1108,11 @@ error:
 	return NULL;
 }
 
-NVGcontext* nvgCreate(int edgeaa, unsigned char _viewId) {
+NANOVG_C_API NVGcontext* nvgCreate(int edgeaa, unsigned char _viewId) {
 	return nvgCreate(edgeaa, _viewId, NULL);
 }
 
-void nvgDelete(struct NVGcontext* ctx)
+NANOVG_C_API void nvgDelete(struct NVGcontext* ctx)
 {
 	nvgDeleteInternal(ctx);
 }

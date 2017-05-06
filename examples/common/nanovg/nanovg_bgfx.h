@@ -10,6 +10,11 @@
 
 namespace bx { struct AllocatorI; }
 
+// Export NanoVG C API to support language bindings
+ #if defined(_MSC_VER)
+ #   define NANOVG_C_API extern "C" __declspec(dllexport)
+ #endif // defined(_MSC_VER)
+
 struct NVGcontext;
 
 struct NVGLUframebuffer {
@@ -21,8 +26,10 @@ struct NVGLUframebuffer {
 typedef struct NVGLUframebuffer NVGLUframebuffer;
 
 NVGcontext* nvgCreate(int edgeaa, unsigned char _viewId, bx::AllocatorI* _allocator);
-NVGcontext* nvgCreate(int edgeaa, unsigned char _viewId);
-void nvgDelete(struct NVGcontext* ctx);
+
+NANOVG_C_API NVGcontext* nvgCreate(int edgeaa, unsigned char _viewId);
+NANOVG_C_API void nvgDelete(struct NVGcontext* ctx);
+
 uint8_t nvgViewId(struct NVGcontext* ctx);
 void nvgViewId(struct NVGcontext* ctx, unsigned char _viewId);
 

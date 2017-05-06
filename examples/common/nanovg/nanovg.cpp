@@ -372,7 +372,7 @@ void nvgDeleteInternal(NVGcontext* ctx)
 	free(ctx);
 }
 
-void nvgBeginFrame(NVGcontext* ctx, int windowWidth, int windowHeight, float devicePixelRatio)
+NANOVG_C_API void nvgBeginFrame(NVGcontext* ctx, int windowWidth, int windowHeight, float devicePixelRatio)
 {
 /*	printf("Tris: draws:%d  fill:%d  stroke:%d  text:%d  TOT:%d\n",
 		ctx->drawCallCount, ctx->fillTriCount, ctx->strokeTriCount, ctx->textTriCount,
@@ -392,12 +392,12 @@ void nvgBeginFrame(NVGcontext* ctx, int windowWidth, int windowHeight, float dev
 	ctx->textTriCount = 0;
 }
 
-void nvgCancelFrame(NVGcontext* ctx)
+NANOVG_C_API void nvgCancelFrame(NVGcontext* ctx)
 {
 	ctx->params.renderCancel(ctx->params.userPtr);
 }
 
-void nvgEndFrame(NVGcontext* ctx)
+NANOVG_C_API void nvgEndFrame(NVGcontext* ctx)
 {
 	ctx->params.renderFlush(ctx->params.userPtr);
 	if (ctx->fontImageIdx != 0) {
@@ -427,17 +427,17 @@ void nvgEndFrame(NVGcontext* ctx)
 	}
 }
 
-NVGcolor nvgRGB(unsigned char r, unsigned char g, unsigned char b)
+NANOVG_C_API NVGcolor nvgRGB(unsigned char r, unsigned char g, unsigned char b)
 {
 	return nvgRGBA(r,g,b,255);
 }
 
-NVGcolor nvgRGBf(float r, float g, float b)
+NANOVG_C_API NVGcolor nvgRGBf(float r, float g, float b)
 {
 	return nvgRGBAf(r,g,b,1.0f);
 }
 
-NVGcolor nvgRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+NANOVG_C_API NVGcolor nvgRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
 	NVGcolor color;
 	// Use longer initialization to suppress warning.
@@ -448,7 +448,7 @@ NVGcolor nvgRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned cha
 	return color;
 }
 
-NVGcolor nvgRGBAf(float r, float g, float b, float a)
+NANOVG_C_API NVGcolor nvgRGBAf(float r, float g, float b, float a)
 {
 	NVGcolor color;
 	// Use longer initialization to suppress warning.
@@ -459,19 +459,19 @@ NVGcolor nvgRGBAf(float r, float g, float b, float a)
 	return color;
 }
 
-NVGcolor nvgTransRGBA(NVGcolor c, unsigned char a)
+NANOVG_C_API NVGcolor nvgTransRGBA(NVGcolor c, unsigned char a)
 {
 	c.a = a / 255.0f;
 	return c;
 }
 
-NVGcolor nvgTransRGBAf(NVGcolor c, float a)
+NANOVG_C_API NVGcolor nvgTransRGBAf(NVGcolor c, float a)
 {
 	c.a = a;
 	return c;
 }
 
-NVGcolor nvgLerpRGBA(NVGcolor c0, NVGcolor c1, float u)
+NANOVG_C_API NVGcolor nvgLerpRGBA(NVGcolor c0, NVGcolor c1, float u)
 {
 	int i;
 	float oneminu;
@@ -487,7 +487,7 @@ NVGcolor nvgLerpRGBA(NVGcolor c0, NVGcolor c1, float u)
 	return cint;
 }
 
-NVGcolor nvgHSL(float h, float s, float l)
+NANOVG_C_API NVGcolor nvgHSL(float h, float s, float l)
 {
 	return nvgHSLA(h,s,l,255);
 }
@@ -505,7 +505,7 @@ static float nvg__hue(float h, float m1, float m2)
 	return m1;
 }
 
-NVGcolor nvgHSLA(float h, float s, float l, unsigned char a)
+NANOVG_C_API NVGcolor nvgHSLA(float h, float s, float l, unsigned char a)
 {
 	float m1, m2;
 	NVGcolor col;
@@ -522,28 +522,28 @@ NVGcolor nvgHSLA(float h, float s, float l, unsigned char a)
 	return col;
 }
 
-void nvgTransformIdentity(float* t)
+NANOVG_C_API void nvgTransformIdentity(float* t)
 {
 	t[0] = 1.0f; t[1] = 0.0f;
 	t[2] = 0.0f; t[3] = 1.0f;
 	t[4] = 0.0f; t[5] = 0.0f;
 }
 
-void nvgTransformTranslate(float* t, float tx, float ty)
+NANOVG_C_API void nvgTransformTranslate(float* t, float tx, float ty)
 {
 	t[0] = 1.0f; t[1] = 0.0f;
 	t[2] = 0.0f; t[3] = 1.0f;
 	t[4] = tx; t[5] = ty;
 }
 
-void nvgTransformScale(float* t, float sx, float sy)
+NANOVG_C_API void nvgTransformScale(float* t, float sx, float sy)
 {
 	t[0] = sx; t[1] = 0.0f;
 	t[2] = 0.0f; t[3] = sy;
 	t[4] = 0.0f; t[5] = 0.0f;
 }
 
-void nvgTransformRotate(float* t, float a)
+NANOVG_C_API void nvgTransformRotate(float* t, float a)
 {
 	float cs = nvg__cosf(a), sn = nvg__sinf(a);
 	t[0] = cs; t[1] = sn;
@@ -551,21 +551,21 @@ void nvgTransformRotate(float* t, float a)
 	t[4] = 0.0f; t[5] = 0.0f;
 }
 
-void nvgTransformSkewX(float* t, float a)
+NANOVG_C_API void nvgTransformSkewX(float* t, float a)
 {
 	t[0] = 1.0f; t[1] = 0.0f;
 	t[2] = nvg__tanf(a); t[3] = 1.0f;
 	t[4] = 0.0f; t[5] = 0.0f;
 }
 
-void nvgTransformSkewY(float* t, float a)
+NANOVG_C_API void nvgTransformSkewY(float* t, float a)
 {
 	t[0] = 1.0f; t[1] = nvg__tanf(a);
 	t[2] = 0.0f; t[3] = 1.0f;
 	t[4] = 0.0f; t[5] = 0.0f;
 }
 
-void nvgTransformMultiply(float* t, const float* s)
+NANOVG_C_API void nvgTransformMultiply(float* t, const float* s)
 {
 	float t0 = t[0] * s[0] + t[1] * s[2];
 	float t2 = t[2] * s[0] + t[3] * s[2];
@@ -578,7 +578,7 @@ void nvgTransformMultiply(float* t, const float* s)
 	t[4] = t4;
 }
 
-void nvgTransformPremultiply(float* t, const float* s)
+NANOVG_C_API void nvgTransformPremultiply(float* t, const float* s)
 {
 	float s2[6];
 	memcpy(s2, s, sizeof(float)*6);
@@ -586,7 +586,7 @@ void nvgTransformPremultiply(float* t, const float* s)
 	memcpy(t, s2, sizeof(float)*6);
 }
 
-int nvgTransformInverse(float* inv, const float* t)
+NANOVG_C_API int nvgTransformInverse(float* inv, const float* t)
 {
 	double invdet, det = (double)t[0] * t[3] - (double)t[2] * t[1];
 	if (det > -1e-6 && det < 1e-6) {
@@ -603,18 +603,18 @@ int nvgTransformInverse(float* inv, const float* t)
 	return 1;
 }
 
-void nvgTransformPoint(float* dx, float* dy, const float* t, float sx, float sy)
+NANOVG_C_API void nvgTransformPoint(float* dx, float* dy, const float* t, float sx, float sy)
 {
 	*dx = sx*t[0] + sy*t[2] + t[4];
 	*dy = sx*t[1] + sy*t[3] + t[5];
 }
 
-float nvgDegToRad(float deg)
+NANOVG_C_API float nvgDegToRad(float deg)
 {
 	return deg / 180.0f * NVG_PI;
 }
 
-float nvgRadToDeg(float rad)
+NANOVG_C_API float nvgRadToDeg(float rad)
 {
 	return rad / NVG_PI * 180.0f;
 }
@@ -631,7 +631,7 @@ static void nvg__setPaintColor(NVGpaint* p, NVGcolor color)
 
 
 // State handling
-void nvgSave(NVGcontext* ctx)
+NANOVG_C_API void nvgSave(NVGcontext* ctx)
 {
 	if (ctx->nstates >= NVG_MAX_STATES)
 		return;
@@ -640,14 +640,14 @@ void nvgSave(NVGcontext* ctx)
 	ctx->nstates++;
 }
 
-void nvgRestore(NVGcontext* ctx)
+NANOVG_C_API void nvgRestore(NVGcontext* ctx)
 {
 	if (ctx->nstates <= 1)
 		return;
 	ctx->nstates--;
 }
 
-void nvgReset(NVGcontext* ctx)
+NANOVG_C_API void nvgReset(NVGcontext* ctx)
 {
 	NVGstate* state = nvg__getState(ctx);
 	memset(state, 0, sizeof(*state));
@@ -674,50 +674,50 @@ void nvgReset(NVGcontext* ctx)
 }
 
 // State setting
-void nvgStrokeWidth(NVGcontext* ctx, float width)
+NANOVG_C_API void nvgStrokeWidth(NVGcontext* ctx, float width)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->strokeWidth = width;
 }
 
-void nvgMiterLimit(NVGcontext* ctx, float limit)
+NANOVG_C_API void nvgMiterLimit(NVGcontext* ctx, float limit)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->miterLimit = limit;
 }
 
-void nvgLineCap(NVGcontext* ctx, int cap)
+NANOVG_C_API void nvgLineCap(NVGcontext* ctx, int cap)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->lineCap = cap;
 }
 
-void nvgLineJoin(NVGcontext* ctx, int join)
+NANOVG_C_API void nvgLineJoin(NVGcontext* ctx, int join)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->lineJoin = join;
 }
 
-void nvgGlobalAlpha(NVGcontext* ctx, float alpha)
+NANOVG_C_API void nvgGlobalAlpha(NVGcontext* ctx, float alpha)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->alpha = alpha;
 }
 
-void nvgTransform(NVGcontext* ctx, float a, float b, float c, float d, float e, float f)
+NANOVG_C_API void nvgTransform(NVGcontext* ctx, float a, float b, float c, float d, float e, float f)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float t[6] = { a, b, c, d, e, f };
 	nvgTransformPremultiply(state->xform, t);
 }
 
-void nvgResetTransform(NVGcontext* ctx)
+NANOVG_C_API void nvgResetTransform(NVGcontext* ctx)
 {
 	NVGstate* state = nvg__getState(ctx);
 	nvgTransformIdentity(state->xform);
 }
 
-void nvgTranslate(NVGcontext* ctx, float x, float y)
+NANOVG_C_API void nvgTranslate(NVGcontext* ctx, float x, float y)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float t[6];
@@ -725,7 +725,7 @@ void nvgTranslate(NVGcontext* ctx, float x, float y)
 	nvgTransformPremultiply(state->xform, t);
 }
 
-void nvgRotate(NVGcontext* ctx, float angle)
+NANOVG_C_API void nvgRotate(NVGcontext* ctx, float angle)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float t[6];
@@ -733,7 +733,7 @@ void nvgRotate(NVGcontext* ctx, float angle)
 	nvgTransformPremultiply(state->xform, t);
 }
 
-void nvgSkewX(NVGcontext* ctx, float angle)
+NANOVG_C_API void nvgSkewX(NVGcontext* ctx, float angle)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float t[6];
@@ -741,7 +741,7 @@ void nvgSkewX(NVGcontext* ctx, float angle)
 	nvgTransformPremultiply(state->xform, t);
 }
 
-void nvgSkewY(NVGcontext* ctx, float angle)
+NANOVG_C_API void nvgSkewY(NVGcontext* ctx, float angle)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float t[6];
@@ -749,7 +749,7 @@ void nvgSkewY(NVGcontext* ctx, float angle)
 	nvgTransformPremultiply(state->xform, t);
 }
 
-void nvgScale(NVGcontext* ctx, float x, float y)
+NANOVG_C_API void nvgScale(NVGcontext* ctx, float x, float y)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float t[6];
@@ -757,62 +757,62 @@ void nvgScale(NVGcontext* ctx, float x, float y)
 	nvgTransformPremultiply(state->xform, t);
 }
 
-void nvgCurrentTransform(NVGcontext* ctx, float* xform)
+NANOVG_C_API void nvgCurrentTransform(NVGcontext* ctx, float* xform)
 {
 	NVGstate* state = nvg__getState(ctx);
 	if (xform == NULL) return;
 	memcpy(xform, state->xform, sizeof(float)*6);
 }
 
-void nvgStrokeColor(NVGcontext* ctx, NVGcolor color)
+NANOVG_C_API void nvgStrokeColor(NVGcontext* ctx, NVGcolor color)
 {
 	NVGstate* state = nvg__getState(ctx);
 	nvg__setPaintColor(&state->stroke, color);
 }
 
-void nvgStrokePaint(NVGcontext* ctx, NVGpaint paint)
+NANOVG_C_API void nvgStrokePaint(NVGcontext* ctx, NVGpaint paint)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->stroke = paint;
 	nvgTransformMultiply(state->stroke.xform, state->xform);
 }
 
-void nvgFillColor(NVGcontext* ctx, NVGcolor color)
+NANOVG_C_API void nvgFillColor(NVGcontext* ctx, NVGcolor color)
 {
 	NVGstate* state = nvg__getState(ctx);
 	nvg__setPaintColor(&state->fill, color);
 }
 
-void nvgFillPaint(NVGcontext* ctx, NVGpaint paint)
+NANOVG_C_API void nvgFillPaint(NVGcontext* ctx, NVGpaint paint)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->fill = paint;
 	nvgTransformMultiply(state->fill.xform, state->xform);
 }
 
-int nvgCreateImageRGBA(NVGcontext* ctx, int w, int h, int imageFlags, const unsigned char* data)
+NANOVG_C_API int nvgCreateImageRGBA(NVGcontext* ctx, int w, int h, int imageFlags, const unsigned char* data)
 {
 	return ctx->params.renderCreateTexture(ctx->params.userPtr, NVG_TEXTURE_RGBA, w, h, imageFlags, data);
 }
 
-void nvgUpdateImage(NVGcontext* ctx, int image, const unsigned char* data)
+NANOVG_C_API void nvgUpdateImage(NVGcontext* ctx, int image, const unsigned char* data)
 {
 	int w, h;
 	ctx->params.renderGetTextureSize(ctx->params.userPtr, image, &w, &h);
 	ctx->params.renderUpdateTexture(ctx->params.userPtr, image, 0,0, w,h, data);
 }
 
-void nvgImageSize(NVGcontext* ctx, int image, int* w, int* h)
+NANOVG_C_API void nvgImageSize(NVGcontext* ctx, int image, int* w, int* h)
 {
 	ctx->params.renderGetTextureSize(ctx->params.userPtr, image, w, h);
 }
 
-void nvgDeleteImage(NVGcontext* ctx, int image)
+NANOVG_C_API void nvgDeleteImage(NVGcontext* ctx, int image)
 {
 	ctx->params.renderDeleteTexture(ctx->params.userPtr, image);
 }
 
-NVGpaint nvgLinearGradient(NVGcontext* ctx,
+NANOVG_C_API NVGpaint nvgLinearGradient(NVGcontext* ctx,
 								  float sx, float sy, float ex, float ey,
 								  NVGcolor icol, NVGcolor ocol)
 {
@@ -851,7 +851,7 @@ NVGpaint nvgLinearGradient(NVGcontext* ctx,
 	return p;
 }
 
-NVGpaint nvgRadialGradient(NVGcontext* ctx,
+NANOVG_C_API NVGpaint nvgRadialGradient(NVGcontext* ctx,
 								  float cx, float cy, float inr, float outr,
 								  NVGcolor icol, NVGcolor ocol)
 {
@@ -878,7 +878,7 @@ NVGpaint nvgRadialGradient(NVGcontext* ctx,
 	return p;
 }
 
-NVGpaint nvgBoxGradient(NVGcontext* ctx,
+NANOVG_C_API NVGpaint nvgBoxGradient(NVGcontext* ctx,
 							   float x, float y, float w, float h, float r, float f,
 							   NVGcolor icol, NVGcolor ocol)
 {
@@ -904,7 +904,7 @@ NVGpaint nvgBoxGradient(NVGcontext* ctx,
 }
 
 
-NVGpaint nvgImagePattern(NVGcontext* ctx,
+NANOVG_C_API NVGpaint nvgImagePattern(NVGcontext* ctx,
 								float cx, float cy, float w, float h, float angle,
 								int image, float alpha)
 {
@@ -927,7 +927,7 @@ NVGpaint nvgImagePattern(NVGcontext* ctx,
 }
 
 // Scissoring
-void nvgScissor(NVGcontext* ctx, float x, float y, float w, float h)
+NANOVG_C_API void nvgScissor(NVGcontext* ctx, float x, float y, float w, float h)
 {
 	NVGstate* state = nvg__getState(ctx);
 
@@ -957,7 +957,7 @@ static void nvg__isectRects(float* dst,
 	dst[3] = nvg__maxf(0.0f, maxy - miny);
 }
 
-void nvgIntersectScissor(NVGcontext* ctx, float x, float y, float w, float h)
+NANOVG_C_API void nvgIntersectScissor(NVGcontext* ctx, float x, float y, float w, float h)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float pxform[6], invxorm[6];
@@ -986,7 +986,7 @@ void nvgIntersectScissor(NVGcontext* ctx, float x, float y, float w, float h)
 	nvgScissor(ctx, rect[0], rect[1], rect[2], rect[3]);
 }
 
-void nvgResetScissor(NVGcontext* ctx)
+NANOVG_C_API void nvgResetScissor(NVGcontext* ctx)
 {
 	NVGstate* state = nvg__getState(ctx);
 	memset(state->scissor.xform, 0, sizeof(state->scissor.xform));
@@ -995,18 +995,18 @@ void nvgResetScissor(NVGcontext* ctx)
 }
 
 // Global composite operation.
-void nvgGlobalCompositeOperation(NVGcontext* ctx, int op)
+NANOVG_C_API void nvgGlobalCompositeOperation(NVGcontext* ctx, int op)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->compositeOperation = nvg__compositeOperationState(op);
 }
 
-void nvgGlobalCompositeBlendFunc(NVGcontext* ctx, int sfactor, int dfactor)
+NANOVG_C_API void nvgGlobalCompositeBlendFunc(NVGcontext* ctx, int sfactor, int dfactor)
 {
 	nvgGlobalCompositeBlendFuncSeparate(ctx, sfactor, dfactor, sfactor, dfactor);
 }
 
-void nvgGlobalCompositeBlendFuncSeparate(NVGcontext* ctx, int srcRGB, int dstRGB, int srcAlpha, int dstAlpha)
+NANOVG_C_API void nvgGlobalCompositeBlendFuncSeparate(NVGcontext* ctx, int srcRGB, int dstRGB, int srcAlpha, int dstAlpha)
 {
 	NVGcompositeOperationState op;
 	op.srcRGB = srcRGB;
@@ -1922,31 +1922,31 @@ static int nvg__expandFill(NVGcontext* ctx, float w, int lineJoin, float miterLi
 
 
 // Draw
-void nvgBeginPath(NVGcontext* ctx)
+NANOVG_C_API void nvgBeginPath(NVGcontext* ctx)
 {
 	ctx->ncommands = 0;
 	nvg__clearPathCache(ctx);
 }
 
-void nvgMoveTo(NVGcontext* ctx, float x, float y)
+NANOVG_C_API void nvgMoveTo(NVGcontext* ctx, float x, float y)
 {
 	float vals[] = { NVG_MOVETO, x, y };
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgLineTo(NVGcontext* ctx, float x, float y)
+NANOVG_C_API void nvgLineTo(NVGcontext* ctx, float x, float y)
 {
 	float vals[] = { NVG_LINETO, x, y };
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgBezierTo(NVGcontext* ctx, float c1x, float c1y, float c2x, float c2y, float x, float y)
+NANOVG_C_API void nvgBezierTo(NVGcontext* ctx, float c1x, float c1y, float c2x, float c2y, float x, float y)
 {
 	float vals[] = { NVG_BEZIERTO, c1x, c1y, c2x, c2y, x, y };
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgQuadTo(NVGcontext* ctx, float cx, float cy, float x, float y)
+NANOVG_C_API void nvgQuadTo(NVGcontext* ctx, float cx, float cy, float x, float y)
 {
     float x0 = ctx->commandx;
     float y0 = ctx->commandy;
@@ -1957,7 +1957,7 @@ void nvgQuadTo(NVGcontext* ctx, float cx, float cy, float x, float y)
     nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgArcTo(NVGcontext* ctx, float x1, float y1, float x2, float y2, float radius)
+NANOVG_C_API void nvgArcTo(NVGcontext* ctx, float x1, float y1, float x2, float y2, float radius)
 {
 	float x0 = ctx->commandx;
 	float y0 = ctx->commandy;
@@ -2013,19 +2013,19 @@ void nvgArcTo(NVGcontext* ctx, float x1, float y1, float x2, float y2, float rad
 	nvgArc(ctx, cx, cy, radius, a0, a1, dir);
 }
 
-void nvgClosePath(NVGcontext* ctx)
+NANOVG_C_API void nvgClosePath(NVGcontext* ctx)
 {
 	float vals[] = { NVG_CLOSE };
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgPathWinding(NVGcontext* ctx, int dir)
+NANOVG_C_API void nvgPathWinding(NVGcontext* ctx, int dir)
 {
 	float vals[] = { NVG_WINDING, (float)dir };
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgArc(NVGcontext* ctx, float cx, float cy, float r, float a0, float a1, int dir)
+NANOVG_C_API void nvgArc(NVGcontext* ctx, float cx, float cy, float r, float a0, float a1, int dir)
 {
 	float a = 0, da = 0, hda = 0, kappa = 0;
 	float dx = 0, dy = 0, x = 0, y = 0, tanx = 0, tany = 0;
@@ -2090,7 +2090,7 @@ void nvgArc(NVGcontext* ctx, float cx, float cy, float r, float a0, float a1, in
 	nvg__appendCommands(ctx, vals, nvals);
 }
 
-void nvgRect(NVGcontext* ctx, float x, float y, float w, float h)
+NANOVG_C_API void nvgRect(NVGcontext* ctx, float x, float y, float w, float h)
 {
 	float vals[] = {
 		NVG_MOVETO, x,y,
@@ -2102,12 +2102,12 @@ void nvgRect(NVGcontext* ctx, float x, float y, float w, float h)
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgRoundedRect(NVGcontext* ctx, float x, float y, float w, float h, float r)
+NANOVG_C_API void nvgRoundedRect(NVGcontext* ctx, float x, float y, float w, float h, float r)
 {
 	nvgRoundedRectVarying(ctx, x, y, w, h, r, r, r, r);
 }
 
-void nvgRoundedRectVarying(NVGcontext* ctx, float x, float y, float w, float h, float radTopLeft, float radTopRight, float radBottomRight, float radBottomLeft)
+NANOVG_C_API void nvgRoundedRectVarying(NVGcontext* ctx, float x, float y, float w, float h, float radTopLeft, float radTopRight, float radBottomRight, float radBottomLeft)
 {
 	if(radTopLeft < 0.1f && radTopRight < 0.1f && radBottomRight < 0.1f && radBottomLeft < 0.1f) {
 		nvgRect(ctx, x, y, w, h);
@@ -2135,7 +2135,7 @@ void nvgRoundedRectVarying(NVGcontext* ctx, float x, float y, float w, float h, 
 	}
 }
 
-void nvgEllipse(NVGcontext* ctx, float cx, float cy, float rx, float ry)
+NANOVG_C_API void nvgEllipse(NVGcontext* ctx, float cx, float cy, float rx, float ry)
 {
 	float vals[] = {
 		NVG_MOVETO, cx-rx, cy,
@@ -2148,7 +2148,7 @@ void nvgEllipse(NVGcontext* ctx, float cx, float cy, float rx, float ry)
 	nvg__appendCommands(ctx, vals, NVG_COUNTOF(vals));
 }
 
-void nvgCircle(NVGcontext* ctx, float cx, float cy, float r)
+NANOVG_C_API void nvgCircle(NVGcontext* ctx, float cx, float cy, float r)
 {
 	nvgEllipse(ctx, cx,cy, r,r);
 }
@@ -2175,7 +2175,7 @@ void nvgDebugDumpPathCache(NVGcontext* ctx)
 	}
 }
 
-void nvgFill(NVGcontext* ctx)
+NANOVG_C_API void nvgFill(NVGcontext* ctx)
 {
 	NVGstate* state = nvg__getState(ctx);
 	const NVGpath* path;
@@ -2204,7 +2204,7 @@ void nvgFill(NVGcontext* ctx)
 	}
 }
 
-void nvgStroke(NVGcontext* ctx)
+NANOVG_C_API void nvgStroke(NVGcontext* ctx)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float scale = nvg__getAverageScale(state->xform);
@@ -2245,72 +2245,72 @@ void nvgStroke(NVGcontext* ctx)
 }
 
 // Add fonts
-int nvgCreateFont(NVGcontext* ctx, const char* name, const char* path)
+NANOVG_C_API int nvgCreateFont(NVGcontext* ctx, const char* name, const char* path)
 {
 	return fonsAddFont(ctx->fs, name, path);
 }
 
-int nvgCreateFontMem(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData)
+NANOVG_C_API int nvgCreateFontMem(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData)
 {
 	return fonsAddFontMem(ctx->fs, name, data, ndata, freeData);
 }
 
-int nvgFindFont(NVGcontext* ctx, const char* name)
+NANOVG_C_API int nvgFindFont(NVGcontext* ctx, const char* name)
 {
 	if (name == NULL) return -1;
 	return fonsGetFontByName(ctx->fs, name);
 }
 
 
-int nvgAddFallbackFontId(NVGcontext* ctx, int baseFont, int fallbackFont)
+NANOVG_C_API int nvgAddFallbackFontId(NVGcontext* ctx, int baseFont, int fallbackFont)
 {
 	if(baseFont == -1 || fallbackFont == -1) return 0;
 	return fonsAddFallbackFont(ctx->fs, baseFont, fallbackFont);
 }
 
-int nvgAddFallbackFont(NVGcontext* ctx, const char* baseFont, const char* fallbackFont)
+NANOVG_C_API int nvgAddFallbackFont(NVGcontext* ctx, const char* baseFont, const char* fallbackFont)
 {
 	return nvgAddFallbackFontId(ctx, nvgFindFont(ctx, baseFont), nvgFindFont(ctx, fallbackFont));
 }
 
 // State setting
-void nvgFontSize(NVGcontext* ctx, float size)
+NANOVG_C_API void nvgFontSize(NVGcontext* ctx, float size)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->fontSize = size;
 }
 
-void nvgFontBlur(NVGcontext* ctx, float blur)
+NANOVG_C_API void nvgFontBlur(NVGcontext* ctx, float blur)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->fontBlur = blur;
 }
 
-void nvgTextLetterSpacing(NVGcontext* ctx, float spacing)
+NANOVG_C_API void nvgTextLetterSpacing(NVGcontext* ctx, float spacing)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->letterSpacing = spacing;
 }
 
-void nvgTextLineHeight(NVGcontext* ctx, float lineHeight)
+NANOVG_C_API void nvgTextLineHeight(NVGcontext* ctx, float lineHeight)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->lineHeight = lineHeight;
 }
 
-void nvgTextAlign(NVGcontext* ctx, int align)
+NANOVG_C_API void nvgTextAlign(NVGcontext* ctx, int align)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->textAlign = align;
 }
 
-void nvgFontFaceId(NVGcontext* ctx, int font)
+NANOVG_C_API void nvgFontFaceId(NVGcontext* ctx, int font)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->fontId = font;
 }
 
-void nvgFontFace(NVGcontext* ctx, const char* font)
+NANOVG_C_API void nvgFontFace(NVGcontext* ctx, const char* font)
 {
 	NVGstate* state = nvg__getState(ctx);
 	state->fontId = fonsGetFontByName(ctx->fs, font);
@@ -2387,7 +2387,7 @@ static void nvg__renderText(NVGcontext* ctx, NVGvertex* verts, int nverts)
 	ctx->textTriCount += nverts/3;
 }
 
-float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char* end)
+NANOVG_C_API float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char* end)
 {
 	NVGstate* state = nvg__getState(ctx);
 	FONStextIter iter, prevIter;
@@ -2454,7 +2454,7 @@ float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char*
 	return iter.x;
 }
 
-void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end)
+NANOVG_C_API void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end)
 {
 	NVGstate* state = nvg__getState(ctx);
 	NVGtextRow rows[2];
@@ -2487,7 +2487,7 @@ void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const ch
 	state->textAlign = oldAlign;
 }
 
-int nvgTextGlyphPositions(NVGcontext* ctx, float x, float y, const char* string, const char* end, NVGglyphPosition* positions, int maxPositions)
+NANOVG_C_API int nvgTextGlyphPositions(NVGcontext* ctx, float x, float y, const char* string, const char* end, NVGglyphPosition* positions, int maxPositions)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
@@ -2537,7 +2537,7 @@ enum NVGcodepointType {
 	NVG_CJK_CHAR,
 };
 
-int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, float breakRowWidth, NVGtextRow* rows, int maxRows)
+NANOVG_C_API int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, float breakRowWidth, NVGtextRow* rows, int maxRows)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
@@ -2743,7 +2743,7 @@ int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, floa
 	return nrows;
 }
 
-float nvgTextBounds(NVGcontext* ctx, float x, float y, const char* string, const char* end, float* bounds)
+NANOVG_C_API float nvgTextBounds(NVGcontext* ctx, float x, float y, const char* string, const char* end, float* bounds)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
@@ -2770,7 +2770,7 @@ float nvgTextBounds(NVGcontext* ctx, float x, float y, const char* string, const
 	return width * invscale;
 }
 
-void nvgTextBoxBounds(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end, float* bounds)
+NANOVG_C_API void nvgTextBoxBounds(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end, float* bounds)
 {
 	NVGstate* state = nvg__getState(ctx);
 	NVGtextRow rows[2];
@@ -2839,7 +2839,7 @@ void nvgTextBoxBounds(NVGcontext* ctx, float x, float y, float breakRowWidth, co
 	}
 }
 
-void nvgTextMetrics(NVGcontext* ctx, float* ascender, float* descender, float* lineh)
+NANOVG_C_API void nvgTextMetrics(NVGcontext* ctx, float* ascender, float* descender, float* lineh)
 {
 	NVGstate* state = nvg__getState(ctx);
 	float scale = nvg__getFontScale(state) * ctx->devicePxRatio;
